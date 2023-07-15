@@ -59,3 +59,11 @@ cambiarPersonaje graduacion p = p { gafas = setGraduacionGafas graduacion . gafa
 
 graduacionPersonaje :: Personaje -> Double
 graduacionPersonaje = graduacion . lentes . gafas
+
+
+
+
+
+
+type Setter a b = (b -> b) -> a -> a
+
