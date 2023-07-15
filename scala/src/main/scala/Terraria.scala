@@ -34,7 +34,15 @@ case class Gafas(armazon: Armazon, lentes: Lentes, decoracion: Decoracion) {
   )
 }
 
-case class Personaje(nombre: String, gafas: Gafas, ropa: Ropa)
+case class Personaje(nombre: String, gafas: Gafas, ropa: Ropa) {
+  def setGraduacionDeLasGafasDeUnPersonaje(personaje: Personaje, graduacion: Double): Personaje = personaje.copy(
+    gafas = personaje.gafas.copy(
+      lentes = personaje.gafas.lentes.copy(
+        graduacion = graduacion
+      )
+    )
+  )
+}
 
 trait Item
 case object Espada extends Item
