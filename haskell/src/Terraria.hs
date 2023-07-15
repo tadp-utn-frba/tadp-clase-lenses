@@ -60,6 +60,16 @@ cambiarPersonaje graduacion p = p { gafas = setGraduacionGafas graduacion . gafa
 graduacionPersonaje :: Personaje -> Double
 graduacionPersonaje = graduacion . lentes . gafas
 
+lentesPersonaje :: Personaje -> Lente
+lentesPersonaje = lentes . gafas
+
+cambiarMaterialPersonaje :: Material -> Personaje -> Personaje
+cambiarMaterialPersonaje nuevoMaterial p = 
+  p { gafas = (gafas p) {
+      lentes = (lentes $ gafas p) { 
+        material = nuevoMaterial }
+        }
+    }
 
 
 

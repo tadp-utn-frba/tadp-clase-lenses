@@ -62,3 +62,8 @@ cambiarGraduacion = over (gafas . lentes . graduacion) . const
 
 graduacionPersonaje :: Personaje -> Double
 graduacionPersonaje = view (gafas . lentes . graduacion)
+
+cambiarMaterialPersonaje :: Material -> Personaje -> Personaje
+cambiarMaterialPersonaje = over (gafas . lentes . material) . const
+
+materialPersonaje = view (gafas . lentes . material)

@@ -12,5 +12,8 @@ libraryDependencies ++= Seq(
   "com.github.julien-truffaut" %%  "monocle-law"   % monocleVersion % "test"
 )
 
+resolvers += Resolver.sonatypeRepo("releases")
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0")
+
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.16" % "test"
 libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.16" % "test"

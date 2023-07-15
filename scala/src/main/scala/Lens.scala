@@ -1,18 +1,26 @@
 package tadp.lenses
 
-case class Lens[O, V](
-                       get: O => V,
-                       set: (O, V) => O
-                     )
-object Lens {
-  def compose[Outer, Inner, Value](
-                                    outer: Lens[Outer, Inner],
-                                    inner: Lens[Inner, Value]
-                                  ): Lens[Outer, Value] = Lens[Outer, Value](
-    get = outer.get andThen inner.get,
-    set = (obj, value) => outer.set(obj, inner.set(outer.get(obj), value))
+object ReflectiveLens {
+  def apply[U, T](fieldName: String): Lens[U, T] = Lens[U,T](
+    get = (u: U) => u.getClass.getField(fieldName).get().asInstanceOf[T],
+    set = (u: U, t: T) => {
+      val copy = u.getClass.getMethod("copy").invoke(u)
+      copy.getClass.getField(fieldName).set(copy, t)
+      copy.asInstanceOf[U]
+    }
   )
+}
 
+case class Lens[U, T](get: U => T, set: (U, T) => U) {
+  def compose[V](other: Lens[T,V]): Lens[U, V] = this $ other
+
+  // outer -> innerLens -> valor
+  def $[V](other: Lens[T,V]): Lens[U, V] = Lens[U,V](
+    get = this.get andThen other.get,
+    set = (obj, value) => this.set(obj, other.set(this.get(obj),value))
+  )
+}
+object Lens {
   def getSet[S, A](lens: Lens[S, A], s: S) = identity(lens, s)
 
   def identity[S, A](lens: Lens[S, A], s: S): Boolean =
@@ -38,3 +46,4 @@ case class Optional[S, A](_getOption: S => Option[A])(_set: A => S => S){
   def getOption(s: S): Option[A] = _getOption(s)
   def set(a: A): S => S = _set(a)
 }
+

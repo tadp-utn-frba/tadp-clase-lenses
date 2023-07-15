@@ -28,7 +28,7 @@ class LensTest extends AnyFlatSpec with should.Matchers {
       get = _.lentes,
       set = (o, v) => o.copy(lentes = v)
     )
-    val graduacionGafasLens: Lens[Gafas, Double] = Lens.compose(lentesGafasLens, graduacionLens)
+    val graduacionGafasLens: Lens[Gafas, Double] = lentesGafasLens $ graduacionLens
 
     val gafas = Gafas(Oro, Lentes(Cristal, 2.0), Rubi)
 
@@ -81,12 +81,12 @@ class LensTest extends AnyFlatSpec with should.Matchers {
 
   "when using an optional of a chest" should "work as well..." in {
     val cofreConArmaduraOptional = Optional[Cofre, Item] {
-      case cofre: ContenidoCofre => Some(cofre.item)
-      case _ => None
-    } { contenido => {
-      case c: ContenidoCofre => c.copy(item = contenido)
-      case cofre => cofre
-    }
+        case cofre: ContenidoCofre => Some(cofre.item)
+        case _ => None
+      } { contenido => {
+        case c: ContenidoCofre => c.copy(item = contenido)
+        case cofre => cofre
+      }
     }
 
     cofreConArmaduraOptional.getOption(ContenidoCofre(Espada)) should be(Some(Espada))
